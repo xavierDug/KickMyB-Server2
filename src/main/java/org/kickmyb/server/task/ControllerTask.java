@@ -41,6 +41,13 @@ public class ControllerTask {
         return "";
     }
 
+    @GetMapping(value = "/api/progress/{taskID}/{value}", produces = "text/plain")
+    public @ResponseBody String deleteTask()
+    {
+        return  "";
+    }
+
+
     @GetMapping("/api/home")
     public @ResponseBody List<HomeItemResponse> home() {
         System.out.println("KICKB SERVER : Task list  with cookie");

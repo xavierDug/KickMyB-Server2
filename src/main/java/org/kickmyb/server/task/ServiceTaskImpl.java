@@ -92,6 +92,13 @@ public class ServiceTaskImpl implements ServiceTask {
     }
 
     @Override
+    public void deleteTask(long taskID)
+    {
+
+
+    }
+
+    @Override
     public List<HomeItemResponse> home(Long userID) {
         MUser user = repoUser.findById(userID).get();
         List<HomeItemResponse> res = new ArrayList<>();
