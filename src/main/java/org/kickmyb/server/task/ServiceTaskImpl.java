@@ -92,8 +92,19 @@ public class ServiceTaskImpl implements ServiceTask {
     }
 
     @Override
-    public void deleteTask(long taskID)
+    public void deleteTask(long taskID, MUser user)
     {
+        MTask element = repo.findById(taskID).get();
+
+        if(user.tasks.contains(element))
+        {
+            element.isDeleted = true;
+            repo.save();
+        }
+        else
+        {
+
+        }
 
 
     }
@@ -103,13 +114,21 @@ public class ServiceTaskImpl implements ServiceTask {
         MUser user = repoUser.findById(userID).get();
         List<HomeItemResponse> res = new ArrayList<>();
         for (MTask t : user.tasks) {
-            HomeItemResponse r = new HomeItemResponse();
-            r.id = t.id;
-            r.percentageDone = percentageDone(t);
-            r.deadline = t.deadline;
-            r.percentageTimeSpent = percentage(t.creationDate, new Date(), t.deadline);
-            r.name = t.name;
-            res.add(r);
+            
+                if (!t.isDeleted) {
+
+                    HomeItemResponse r = new HomeItemResponse();
+                    r.id = t.id;
+                    r.percentageDone = percentageDone(t);
+                    r.deadline = t.deadline;
+                    r.percentageTimeSpent = percentage(t.creationDate, new Date(), t.deadline);
+                    r.name = t.name;
+                    res.add(r);
+
+
+                }
+
+
         }
         return res;
     }
