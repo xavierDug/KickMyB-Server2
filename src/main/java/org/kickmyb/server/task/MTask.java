@@ -17,7 +17,7 @@ public class MTask {
     public Long id;
     public Date creationDate;
     public Date deadline;
-    public Boolean isDelete;
+    public Boolean isDeleted;
 
     @Convert(converter = AttributeEncryptor.class)  // TODO exemple stupide, servirait plutôt pour NAS ou numero carte crédit
     public String name;

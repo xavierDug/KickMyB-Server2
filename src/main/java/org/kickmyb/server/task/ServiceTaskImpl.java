@@ -34,6 +34,12 @@ public class ServiceTaskImpl implements ServiceTask {
     public TaskDetailResponse detail(Long id, MUser user) {
         //MTask element = user.tasks.stream().filter(elt -> elt.id == id).findFirst().get();
         MTask element = repo.findById(id).get();
+
+        if(element.isDeleted)
+        {
+            return  null;
+        }
+
         TaskDetailResponse response = new TaskDetailResponse();
         response.name = element.name;
         response.id = element.id;
@@ -66,6 +72,7 @@ public class ServiceTaskImpl implements ServiceTask {
         }
         // tout est beau, on crée
         MTask t = new MTask();
+        t.isDeleted = false;
         t.name = req.name;
         t.creationDate = DateTime.now().toDate();
         if (req.deadline == null) {
@@ -81,6 +88,12 @@ public class ServiceTaskImpl implements ServiceTask {
     @Override
     public void updateProgress(long taskID, int value) {
         MTask element = repo.findById(taskID).get();
+
+        if(element.isDeleted)
+        {
+            //
+        }
+
         // TODO validate value is between 0 and 100
         MProgressEvent pe= new MProgressEvent();
         pe.resultPercentage = value;
@@ -99,7 +112,14 @@ public class ServiceTaskImpl implements ServiceTask {
         if(user.tasks.contains(element))
         {
             element.isDeleted = true;
-            repo.save();
+
+            if(element.photo != null)
+            {
+                element.photo.isDeleted = true;
+
+            }
+
+            repo.save(element);
         }
         else
         {
@@ -163,18 +183,24 @@ public class ServiceTaskImpl implements ServiceTask {
         MUser user = repoUser.findById(userID).get();
         List<HomeItemPhotoResponse> res = new ArrayList<>();
         for (MTask t : user.tasks) {
-            HomeItemPhotoResponse r = new HomeItemPhotoResponse();
-            r.id = t.id;
-            r.percentageDone = percentageDone(t);
-            r.deadline = t.deadline;
-            r.percentageTimeSpent = percentage(t.creationDate, new Date(), t.deadline);
-            r.name = t.name;
-            if(t.photo != null) {
-                r.photoId = t.photo.id;
-            } else {
-                r.photoId = 0L;
+
+            if (!t.isDeleted) {
+
+                HomeItemPhotoResponse r = new HomeItemPhotoResponse();
+                r.id = t.id;
+                r.percentageDone = percentageDone(t);
+                r.deadline = t.deadline;
+                r.percentageTimeSpent = percentage(t.creationDate, new Date(), t.deadline);
+                r.name = t.name;
+                if(t.photo != null) {
+                    r.photoId = t.photo.id;
+                } else {
+                    r.photoId = 0L;
+                }
+                res.add(r);
             }
-            res.add(r);
+
+
         }
         return res;
     }
@@ -183,6 +209,12 @@ public class ServiceTaskImpl implements ServiceTask {
     public TaskDetailPhotoResponse detailPhoto(Long id, MUser user) {
         MTask element = user.tasks.stream().filter(elt -> elt.id == id).findFirst().get();
         TaskDetailPhotoResponse response = new TaskDetailPhotoResponse();
+
+        if(element.isDeleted)
+        {
+            return null;
+        }
+
         response.name = element.name;
         response.id = element.id;
         // calcul le temps écoulé en pourcentage

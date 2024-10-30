@@ -15,4 +15,5 @@ public class MPhoto {
     @Basic  public String contentType;
     @OneToOne
     public MTask task;
+    public boolean isDeleted;
 }

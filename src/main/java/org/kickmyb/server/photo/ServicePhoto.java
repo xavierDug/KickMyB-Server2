@@ -30,6 +30,7 @@ public class ServicePhoto {
         photo.blob = file.getBytes();
         photo.contentType = file.getContentType();
         photo.task = task;
+        photo.isDeleted = false;
 
         photo = repoPics.save(photo);
 
@@ -45,6 +46,7 @@ public class ServicePhoto {
         MPhoto photo = new MPhoto();
         photo.blob = file.getBytes();
         photo.contentType = file.getContentType();
+        photo.isDeleted = false;
 
         photo = repoPics.save(photo);
 

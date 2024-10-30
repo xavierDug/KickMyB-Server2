@@ -98,6 +98,7 @@ public class ControllerPhoto {
     //Méthode utilisée pour récupérer le détail d'une tâche avec des photos
     @GetMapping("/api/detail/photo/{id}")
     public @ResponseBody TaskDetailPhotoResponse detailPhoto(@PathVariable long id) {
+
         System.out.println("KICKB SERVER : Detail  with cookie ");
         ConfigHTTP.attenteArticifielle();
         MUser user = currentUser();
