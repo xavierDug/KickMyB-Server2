@@ -13,6 +13,7 @@ import org.kickmyb.server.account.ServiceAccount;
 import org.kickmyb.server.task.MTask;
 import org.kickmyb.server.task.ServiceTask;
 import org.kickmyb.transfer.AddTaskRequest;
+import org.kickmyb.transfer.HomeItemPhotoResponse;
 import org.kickmyb.transfer.SignupRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,6 +21,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
+import java.util.List;
 
 // TODO pour celui ci on aimerait pouvoir mocker l'utilisateur pour ne pas avoir à le créer
 
@@ -61,26 +63,21 @@ class ServiceTaskTests {
 		AddTaskRequest taskRequest = new AddTaskRequest();
 		taskRequest.name = "task1";
 		taskRequest.deadline = LocalDateTime.now().toDate();
-		serviceTask.addOne(taskRequest,testUser);
+		serviceTask.addOne(taskRequest,serviceTask.userFromUsername("test"));
+
+		AddTaskRequest taskRequest2 = new AddTaskRequest();
+		taskRequest2.name = "task2";
+		taskRequest2.deadline = LocalDateTime.now().toDate();
+		serviceTask.addOne(taskRequest2,serviceTask.userFromUsername("test"));
+
+		Assertions.assertEquals(2,serviceTask.homePhoto( serviceTask.userFromUsername("test").id).size());
 
 
-		MTask taskTest2 = new MTask();
-		taskTest2.id = 2L;
-		testUser.tasks.add(taskTest2);
 
-		MTask taskTest3 = new MTask();
-		taskTest3.id = 3L;
-		testUser.tasks.add(taskTest3);
+		serviceTask.deleteTask(2, serviceTask.userFromUsername("test"));
+		//serviceTask.userFromUsername("test");
 
-
-		MTask taskTest4 = new MTask();
-		taskTest4.id = 4L;
-		testUser.tasks.add(taskTest4);
-
-
-		serviceTask.deleteTask(2, testUser);
-
-		Assertions.assertEquals(true, taskTest3.isDeleted);
+		Assertions.assertEquals(1, serviceTask.homePhoto( serviceTask.userFromUsername("test").id).size());
 
 
 	}

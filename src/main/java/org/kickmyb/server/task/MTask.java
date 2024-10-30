@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by joris on 15-09-15.
@@ -28,4 +29,11 @@ public class MTask {
     @OneToOne
     public MPhoto photo;
 
+    @Override
+    public boolean equals(Object obj) {
+        if(obj.getClass() != MTask.class) {
+            return false;
+        }
+        return Objects.equals(((MTask) obj).id, id);
+    }
 }

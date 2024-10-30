@@ -108,7 +108,7 @@ public class ServiceTaskImpl implements ServiceTask {
     public void deleteTask(long taskID, MUser user)
     {
         MTask element = repo.findById(taskID).get();
-
+// tacheIndex == element
         if(user.tasks.contains(element))
         {
             element.isDeleted = true;
